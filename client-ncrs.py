@@ -2,7 +2,7 @@ import socket
 
 HEADER = 1024
 PORT = 12345
-SERVER = '127.0.0.1'
+SERVER = '127.0.1.1'
 # SERVER = socket.gethostbyname(socket.gethostname())
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
