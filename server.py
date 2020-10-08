@@ -3,7 +3,7 @@ import threading
 
 HEADER = 1024
 PORT = 12345
-SERVER = socket.gethostbyname(socket.gethostname())
+SERVER = '0.0.0.0'
 ADDR = (SERVER, PORT)
 FORMAT = 'utf-8'
 DISCONNECT = "bye"
