@@ -1,0 +1,44 @@
+import socket
+import threading
+
+HEADER = 1024
+PORT = 12345
+SERVER = '0.0.0.0'
+ADDR = (SERVER, PORT)
+FORMAT = 'utf-8'
+DISCONNECT = "bye"
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+server.bind(ADDR)
+server.listen()
+sockets_list = [server]
+clients = {}
+
+def handle_client(conn, addr):
+    print(f"[CONNECTION FROM] {addr} connected.")
+    connected = True
+    while connected:
+        msg_length = conn.recv(HEADER).decode(FORMAT)
+        if msg_length:
+            msg_length = int(msg_length)
+            msg = conn.recv(msg_length).decode(FORMAT)
+            if msg == DISCONNECT:
+                connected = False
+            
+            print(f"[{addr}] {msg}")
+            conn.send(f"message received: {msg}".encode(FORMAT))
+    
+    conn.close()
+
+def start():
+
+    print(f"[LISTENING] Server is listening on {SERVER}")
+    while True:
+        conn, addr = server.accept()
+        thread = threading.Thread(target=handle_client, args = (conn, addr))
+        thread.start()
+        print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+
+print("[STARTING] server is starting ...")
+start()
